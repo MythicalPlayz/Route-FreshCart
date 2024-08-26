@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.layout {
+    min-height: calc(100vh - 80px);
+}
+
+.active {
+    font-weight: bold;
+}
+
+* {
+    transition: color 500ms ease-in-out, background-color 500ms ease-in-out;
+}
+
+.bg-main {
+    @apply bg-green-500;
+}
+
+.text-main {
+    @apply text-green-500;
+}
+
+nav * {
+    transition: height 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.product ,.product > * {
+    transition: all 500ms;
+    border-width: 0;
+}
+
+.product:hover {
+    border-width: 2px;
+}
+
+.product .btn {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .product {
+        border-width: 2px;
+    }
+    
+
+    .product .btn {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.product:hover .btn {
+    transform: translateY(0);
+    opacity: 1;
+}
+.dark .slick-dots li button::before,.dark .slick-dots li.slick-active button:before {
+    color: white;
+}
