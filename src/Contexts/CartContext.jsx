@@ -47,7 +47,7 @@ export default function CartContextProvider({ children }) {
             //console.log(data);
 
             setCart(data);
-            location.href = '/allorders';
+            location.href = '/Route-FreshCart/#/allorders';
         }
         catch (err) {
             toast.error(err, {
@@ -66,7 +66,8 @@ export default function CartContextProvider({ children }) {
     async function checkoutStripe(shippingAddress){
         setLoading(true);
         try {
-            let { data } = await axios.post(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cart.cartId}?url=${location.origin}`,{shippingAddress}, {headers});
+            let redirectUrl = encodeURIComponent(`${location.origin}/Route-FreshCart/#`);
+            let { data } = await axios.post(`https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cart.cartId}?url=${redirectUrl}`,{shippingAddress}, {headers});
 
             //console.log(data);
             location.href = data.session.url;
