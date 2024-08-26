@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, createHashRouter, RouterProvider } from 'react-router-dom'
 import Layout from './Components/Layout/Layout'
 import Home from './Components/Home/Home'
 import Register from './Components/Register/Register'
@@ -21,7 +21,7 @@ import Products from './Components/Products/Products'
 import Categories from './Components/Categories/Categories'
 import Brands from './Components/Brands/Brands'
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '', element: <Layout />, children: [
       { index: true, element: <ProtectedRoute><Home /></ProtectedRoute> },
