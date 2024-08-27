@@ -2,33 +2,15 @@ import React, { useEffect, useState } from 'react'
 import './Brands.module.css'
 import Loading from '../Loading/Loading';
 import axios from 'axios';
+import useBrands from '../../Hooks/useBrands';
 
 export default function Brands() {
 
-    const [loading, setLoading] = useState(true);
-    const [brands, setBrands] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [focus, setFocus] = useState(null);
 
-
-    async function getBrands() {
-        setLoading(true);
-        try {
-            let { data } = await axios.get(`https://ecommerce.routemisr.com/api/v1/brands`);
-            setBrands(data.data);
-        }
-        catch (error) {
-            toast.error(error, {
-                duration: 3000,
-                position: 'top-right',
-                style: {
-                    backgroundColor: '#ef4444',
-                    color: '#fff',
-                },
-            }, []);
-            //console.warn(error);
-        }
-        setLoading(false);
-    }
+    
+    let {data, isLoading, isFetching, isError, error} = useBrands();
 
     async function focusFun(image,name,slug) {
         setLoading(true);
@@ -42,17 +24,16 @@ export default function Brands() {
     }
 
     useEffect(() => {
-        getBrands();
         document.title = 'FreshCart: Brands';
     }, [])
 
     return <>
 
-        {loading && <Loading />}
+        {(loading || isLoading) && <Loading />}
         <div className="p-4">
             <h1 className="text-3xl py-4 dark:text-white">Brands</h1>
             <div className="flex flex-col md:flex-row items-baseline flex-wrap space-y-2">
-                {brands?.map((brand, index) =>
+                {data?.map((brand, index) =>
                     <div className="w-full md:w-1/2 lg:w-1/4 p-4" key={index}>
                         <div className='flex-flex-col transition-all rounded-md shadow-none hover:shadow-md border-[1px] border-opacity-25 border-slate-500 hover:shadow-green-500 w-full overflow-hidden cursor-pointer' onClick={() => { focusFun(brand.image,brand.name,brand.slug)}}>
                             <div className="w-full bg-white">

@@ -7,6 +7,8 @@ import axios from 'axios';
 import RelatedProducts from '../RelatedProducts/RelatedProducts';
 import { CartContext } from '../../Contexts/CartContext';
 import { WishlistContext } from '../../Contexts/WishlistContext';
+import useDetails from '../../Hooks/useDetails';
+import useProducts from '../../Hooks/useProducts';
 
 export default function Details() {
 
@@ -18,9 +20,6 @@ export default function Details() {
   let { addProductToCart, setLoading } = useContext(CartContext);
   let loadingShop = useContext(CartContext).loading;
   let { getWishlist, isItemWishlisted, addProductToWishlist, deleteProductFromWishlist, loading } = useContext(WishlistContext);
-  useEffect(() => {
-    getWishlist();
-  }, []);
 
   var settings = {
     dots: true,
@@ -55,38 +54,36 @@ export default function Details() {
     ]
   };
 
-  const [productDetails, setProductDetails] = useState([]);
-  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [productDetails, setProductDetails] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState(null);
 
   let { id } = useParams();
 
-  async function getProductDetails(ft) {
-    setLoading(true);
-    let { data } = await axios.get(`https://ecommerce.routemisr.com/api/v1/products/${id}`);
-    setProductDetails(data.data);
-    if (ft)
-      await getCategoryRelatedProducts(data.data.category.name);
-    setLoading(false);
-  }
+  let productsData = useProducts().data;
+  let {data, isLoading, isFetching, isError, error} = useDetails(id);
 
-  async function getCategoryRelatedProducts(categoryName) {
-    let { data } = await axios.get(`https://ecommerce.routemisr.com/api/v1/products/`);
-    setRelatedProducts(data.data.filter((product) => { return product.category.name === categoryName }));
-  }
+  
+  useEffect(() => {
+
+    
+    setProductDetails(data);
+  }, [data,id]);
 
   useEffect(() => {
-    getProductDetails(true);
+    if (data)
+      setRelatedProducts(productsData?.filter((product) => { return product.category.name === data?.category.name }));
+  }, [data,productsData]);
+
+  useEffect(() => {
+    setProductDetails(data);
+    setRelatedProducts(productsData?.filter((product) => { return product.category.name === data?.category.name }));
   }, []);
-
-  useEffect(() => {
-    getProductDetails();
-  }, [id]);
 
   return <>
 
     <div className="p-4">
       <h1 className="text-3xl dark:text-white">Product Details</h1>
-      {productDetails.category ? <div className="flex flex-wrap md:flex-nowrap justify-center items-center py-10 px-4">
+      {productDetails ? <div className="flex flex-wrap md:flex-nowrap justify-center items-center py-10 px-4">
         <div className="w-full md:w-1/4">
           {
             productDetails.images.length > 1 ?
@@ -111,10 +108,11 @@ export default function Details() {
           {isItemWishlisted(productDetails.id) ? <button className='btn w-full text-white bg-pink-500 rounded-md py-1 my-2' onClick={() => { deleteProductFromWishlist(productDetails.id) }}><i className='fa-solid fa-heart'></i> Remove from Wishlist</button> : <button className='btn w-full text-white bg-pink-500 rounded-md py-1 my-2' onClick={() => { addProductToWishlist(productDetails.id) }}><i className='fa-solid fa-heart'></i> Add to Wishlist</button>}
         </div>
       </div> : <Loading />}
-      {(loading || loadingShop) && <Loading />}
+      {(isLoading || loadingShop || loading) && <Loading />}
       <div className="w-full py-8">
         <h4 className='dark:text-white py-4 font-medium text-[20px]'>Related Products</h4>
         <Slider {...settings2}>
+          {console.log(relatedProducts)}
           {relatedProducts?.map((product, index) =>
             <RelatedProducts product={product} key={index} />
           )}

@@ -2,33 +2,15 @@ import React, { useEffect, useState } from 'react'
 import './Categories.module.css'
 import Loading from '../Loading/Loading';
 import axios from 'axios';
+import useCategories from '../../Hooks/useCategories';
 
 export default function Categories() {
 
-    const [loading, setLoading] = useState(true);
-    const [categories, setCategories] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [subCategories, setSubCategories] = useState(null);
     const [subCategoryName, setSubCategoryName] = useState('');
 
-    async function getCategories() {
-        setLoading(true);
-        try {
-            let { data } = await axios.get(`https://ecommerce.routemisr.com/api/v1/categories`);
-            setCategories(data.data);
-        }
-        catch (error) {
-            toast.error(error, {
-                duration: 3000,
-                position: 'top-right',
-                style: {
-                    backgroundColor: '#ef4444',
-                    color: '#fff',
-                },
-            }, []);
-            //console.warn(error);
-        }
-        setLoading(false);
-    }
+    let {data, isLoading, isFetching, isError, error} = useCategories();
 
     async function getSubCategories(id,name) {
         setLoading(true);
@@ -54,16 +36,15 @@ export default function Categories() {
 
 
     useEffect(() => {
-        getCategories();
         document.title = 'FreshCart: Categories';
     }, [])
 
     return <>
-        {loading && <Loading />}
+        {(loading || isLoading) && <Loading />}
         <div className="p-4">
             <h1 className="text-3xl py-4 dark:text-white">Categories</h1>
             <div className="flex flex-col md:flex-row items-baseline flex-wrap space-y-2">
-                {categories?.map((category, index) =>
+                {data?.map((category, index) =>
                     <div className="w-full md:w-1/3 p-4" key={index}>
                         <div className='flex-flex-col transition-all rounded-md shadow-none hover:shadow-md border-[1px] border-opacity-25 border-slate-500 hover:shadow-green-500 w-full overflow-hidden cursor-pointer' onClick={ ()=> {getSubCategories(category._id,category.name)} }>
                         <div className="w-full">

@@ -3,12 +3,14 @@ import logo from '../../assets/images/freshcart-logo.svg'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../Contexts/UserContext';
 import { CartContext } from '../../Contexts/CartContext';
+import { WishlistContext } from '../../Contexts/WishlistContext';
 
 export default function Nav() {
 
     let navigate = useNavigate();
     let { userData, setUserData } = useContext(UserContext);
     let {cart, getCart} = useContext(CartContext);
+    let {getWishlist} = useContext(WishlistContext);
 
     function logout() {
         localStorage.removeItem('userToken');
@@ -18,6 +20,7 @@ export default function Nav() {
 
     useEffect(() => {
         getCart();
+        getWishlist();
     }, [])
 
     let isDown = false;

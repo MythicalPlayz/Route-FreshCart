@@ -106,7 +106,7 @@ export default function CartContextProvider({ children }) {
                 },
             });
 
-            setCart(data);
+            await getCart();
             
         }
         catch (err) {
@@ -145,7 +145,7 @@ export default function CartContextProvider({ children }) {
                     
                 },
             });
-            setCart(data);
+            await getCart();
             
         }
         catch (err) {
@@ -177,7 +177,7 @@ export default function CartContextProvider({ children }) {
                     
                 },
             });
-            setCart(data);
+            await getCart();
             
         }
         catch (err) {
@@ -209,7 +209,7 @@ export default function CartContextProvider({ children }) {
                     
                 },
             });
-            setCart(data);
+            await getCart();
             
         }
         catch (err) {

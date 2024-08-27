@@ -20,6 +20,8 @@ import AllOrders from './Components/AllOrders/AllOrders'
 import Products from './Components/Products/Products'
 import Categories from './Components/Categories/Categories'
 import Brands from './Components/Brands/Brands'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const router = createHashRouter([
   {
@@ -39,18 +41,23 @@ const router = createHashRouter([
       { path: '*', element: <NotFound /> },
     ]
   }
-])
+]);
+
+let client = new QueryClient();
 
 function App() {
 
   return (
     <UserContextProvider>
-      <CartContextProvider>
-        <WishlistContextProvider>
-          <RouterProvider router={router}></RouterProvider>
-          <Toaster />
-        </WishlistContextProvider>
-      </CartContextProvider>
+      <QueryClientProvider client={client}>
+        <CartContextProvider>
+          <WishlistContextProvider>
+            <RouterProvider router={router}></RouterProvider>
+            <Toaster />
+            {/* <ReactQueryDevtools/> */}
+          </WishlistContextProvider>
+        </CartContextProvider>
+      </QueryClientProvider>
     </UserContextProvider>
   )
 }

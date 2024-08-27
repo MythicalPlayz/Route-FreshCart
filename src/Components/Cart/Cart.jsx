@@ -11,7 +11,6 @@ export default function Cart() {
     let { getCart, cart, updateProductCount, loading, deleteProductFromCart, clearCart } = useContext(CartContext);
 
     useEffect(() => {
-        getCart();
         document.title = 'FreshCart: Cart';
     }, []);
 

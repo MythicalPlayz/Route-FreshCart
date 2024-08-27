@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import './CategorySlider.module.css'
 import Slider from 'react-slick';
 import axios from 'axios';
+import useCategories from '../../Hooks/useCategories';
 
 export default function CategorySlider() {
 
 
-    const [categories, setCategories] = useState([]);
+    let {data, isLoading, isFetching, isError, error} = useCategories();
 
     var settings = {
         dots: true,
@@ -32,35 +33,10 @@ export default function CategorySlider() {
         ]
     };
 
-    async function getProductCategories() {
-        try {
-            let { data } = await axios.get(`https://ecommerce.routemisr.com/api/v1/categories`);
-            setCategories(data.data);
-
-        }
-        catch (error) {
-            toast.error(error, {
-                duration: 3000,
-                position: 'top-right',
-                style: {
-                    backgroundColor: '#ef4444',
-                    color: '#fff',
-                },
-            }, []);
-            //console.warn(error);
-
-        }
-    }
-
-    useEffect(() => {
-        getProductCategories();
-    }, [])
-
-
     return (
         <div className='py-4'>
             <Slider {...settings}>
-                {categories?.map((catergory, index) => <div key={index} className='my-6'>
+                {data?.map((catergory, index) => <div key={index} className='my-6'>
                     <img className='w-full h-[250px] py-4' src={catergory.image}></img>
                     <h2 className='font-medium dark:text-white'>{catergory.name}</h2>
                 </div>)}

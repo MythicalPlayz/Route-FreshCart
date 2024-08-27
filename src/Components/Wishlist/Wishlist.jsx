@@ -8,7 +8,6 @@ export default function Wishlist() {
     let { getWishlist, setWishlist, deleteProductFromWishlist, loading, wishlist } = useContext(WishlistContext);
 
     useEffect(() => {
-        getWishlist();
         document.title = 'FreshCart: Wishlist';
     }, []);
 
